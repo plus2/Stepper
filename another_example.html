@@ -15,6 +15,7 @@
         ol li {display:none;height:200px;-moz-border-radius:1.5em;-webkit-border-radius:1.5em;border-radius:1.5em;padding:50px 20px;background-color:#eee;text-align:center;font-size:2em;position:relative;font-weight:bold}
           ol li a {font-size:.5em;position:absolute;bottom:1.5em;right:3em;font-weight:normal}
           ol li a.previous {right:6em}
+          ol li em {display:block;font-weight:normal;margin-top:1.5em}
         ol li.active {display:block}
 
     a {font-size:.6em;color:#ccc;margin-left:5px}
@@ -25,28 +26,33 @@
   <script type="text/javascript" charset="utf-8">
 
     $(function() {
-      
-      function transition (event) {
+
+      function transition (event, welcome_text) {
         var list = $("#steps");
+        $(list).find("em").remove();
         $(list).find(".active").fadeOut(function() {
-          $(list).trigger(event);
-          $(list).find(".active").fadeIn();
+          $(list)
+            .trigger(event)
+            .find(".active").fadeIn(function() {
+              $("<em/>")
+                .text(welcome_text)
+                .hide()
+                .appendTo(this)
+                .fadeIn("slow");
+            });
         });
       };
 
       // Initialise stepper
       // Setup events for moving about
-      $("#steps")
-        .stepper()
-        .children("li")
-          .append('<a href="#" class="previous">Previous</a><a href="#" class="next">Next</a>');
+      $("#steps").stepper();
 
       $("a.next").bind("click", function() {
-        transition("nudgeForward");
+        transition("nudgeForward", "Zoooooming forward in time");
       });
 
       $("a.previous").bind("click", function() {
-        transition("nudgeBackward");
+        transition("nudgeBackward", "It's like Back To The Future");
       });
 
     });
