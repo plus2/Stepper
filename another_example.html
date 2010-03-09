@@ -25,23 +25,28 @@
   <script type="text/javascript" charset="utf-8">
 
     $(function() {
+      
+      function transition (event) {
+        var list = $("#steps");
+        $(list).find(".active").fadeOut(function() {
+          $(list).trigger(event);
+          $(list).find(".active").fadeIn();
+        });
+      };
 
       // Initialise stepper
       // Setup events for moving about
       $("#steps")
         .stepper()
         .children("li")
-          .bind("dblclick", function() {
-            $(this).trigger("activate");
-          })
           .append('<a href="#" class="previous">Previous</a><a href="#" class="next">Next</a>');
 
       $("a.next").bind("click", function() {
-        $("#steps").trigger("nudgeForward");
+        transition("nudgeForward");
       });
 
       $("a.previous").bind("click", function() {
-        $("#steps").trigger("nudgeBackward");
+        transition("nudgeBackward");
       });
 
     });
