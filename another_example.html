@@ -1,0 +1,62 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+  <title>sketch</title>
+  <style type="text/css" media="screen">
+
+    .active {color:#ff0000}
+    .inactive {color:#ddd}
+    a {font-size:.6em;color:#ccc;margin-left:5px}
+    .inactive a {display:none}
+
+  </style>
+  <script src="lib/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
+  <script src="lib/jquery.stepper.js" type="text/javascript" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+
+    $(function() {
+
+      // Initialise stepper
+      // Setup events for moving about
+      $("#steps")
+        .stepper()
+        .children("li")
+          .bind("dblclick", function() {
+            $(this).trigger("activate");
+          })
+          .append('<a href="#" class="previous">Previous</a><a href="#" class="next">Next</a>');
+
+      $("a.next").bind("click", function() {
+        $("#steps").trigger("nudgeForward");
+      });
+
+      $("a.previous").bind("click", function() {
+        $("#steps").trigger("nudgeBackward");
+      });
+
+    });
+
+  </script>
+
+</head>
+
+<body>
+
+  <a href="#" class="previous">Previous</a>
+  <a href="#" class="next">Next</a>
+  <ol id="steps">
+    <li>First step</li>
+    <li>Second step</li>
+    <li>Third one</li>
+    <li>Fourth</li>
+    <li>Fifth step</li>
+    <li>Sixth</li>
+    <li>Last step</li>
+  </ol>
+
+</body>
+</html>
