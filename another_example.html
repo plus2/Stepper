@@ -8,10 +8,16 @@
   <title>sketch</title>
   <style type="text/css" media="screen">
 
-    .active {color:#ff0000}
-    .inactive {color:#ddd}
+    body {background-color:#333;font-family: "Helvetica Neue", sans-serif;}
+      body > .previous, body > .next {position:absolute;top:1.5em;right:1.5em}
+      body > .previous {right:4.5em}
+      body ol {width:400px;margin:4.5em auto 3em auto}
+        ol li {display:none;height:200px;-moz-border-radius:1.5em;-webkit-border-radius:1.5em;border-radius:1.5em;padding:50px 20px;background-color:#eee;text-align:center;font-size:2em;position:relative;font-weight:bold}
+          ol li a {font-size:.5em;position:absolute;bottom:1.5em;right:3em;font-weight:normal}
+          ol li a.previous {right:6em}
+        ol li.active {display:block}
+
     a {font-size:.6em;color:#ccc;margin-left:5px}
-    .inactive a {display:none}
 
   </style>
   <script src="lib/jquery-1.4.2.min.js" type="text/javascript" charset="utf-8"></script>
