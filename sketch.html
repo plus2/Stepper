@@ -1,0 +1,155 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en" lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+  <title>sketch</title>
+  <style type="text/css" media="screen">
+
+    .active {color:#ff0000}
+    .inactive {color:#ddd}
+    a {font-size:.6em;color:#ccc;margin-left:5px}
+    .inactive a {display:none}
+
+  </style>
+  <script type="text/javascript" src="http://www.google.com/jsapi" charset="utf-8"></script>
+  <script type="text/javascript" charset="utf-8">
+    google.load("jquery", "1.3.2");
+  </script>
+  <script type="text/javascript" charset="utf-8">
+
+    // Define jQuery plugin
+    (function($) {
+
+      var opts, el;
+
+      $.fn.extend({
+        stepper: function(options) {
+          opts = $.extend({}, $.fn.stepper.defaults, options);
+          // This will be called on an element or collection of elements
+          return this.each(initialise);
+        }
+      });
+
+      $.fn.stepper.defaults = {
+        step_el: "li",
+        event_names: {
+          goForward: "goForward",
+          goBackward: "goBackward",
+          nudgeForward: "nudgeForward",
+          nudgeBackward: "nudgeBackward",
+          activate: "activate",
+          deactivate: "deactivate"
+        },
+        class_names: {
+          active: "active",
+          inactive: "inactive"
+        }
+      };
+
+      // Private functions
+      function initialise () {
+        // This is an instance of stepper. Set it up.
+        el = this;
+        // Setup step progression
+        setupStepProgression();
+        // Deactivate all
+        $(el)
+          .children(opts.step_el)
+            .trigger(opts.event_names.deactivate);
+        // Activate first one
+        $(el)
+          .children(opts.step_el + ":first-child")
+            .trigger(opts.event_names.activate);
+      }
+
+      function setupStepProgression () {
+        // Child handled progression
+        $(el)
+          .children(opts.step_el)
+            .bind(opts.event_names.goBackward, function() {
+              if ($(this).prev().get(0)) {
+                $(this)
+                  .prev()
+                    .trigger(opts.event_names.activate);
+              }
+            })
+            .bind(opts.event_names.goForward, function() {
+              if ($(this).next().get(0)) {
+                $(this)
+                  .next()
+                    .trigger(opts.event_names.activate);
+              }
+            })
+            .bind(opts.event_names.activate, function() {
+              // Deactivate active step
+              $(getActiveStep()).trigger(opts.event_names.deactivate);
+              // Activate this one
+              $(this)
+                .addClass(opts.class_names.active)
+                .removeClass(opts.class_names.inactive);
+            })
+            .bind(opts.event_names.deactivate, function() {
+              $(this)
+                .addClass(opts.class_names.inactive)
+                .removeClass(opts.class_names.active);
+            });;
+        // Parent handled progression
+        $(el)
+          .bind(opts.event_names.nudgeForward, function() {
+            $(getActiveStep()).trigger(opts.event_names.goForward);
+          })
+          .bind(opts.event_names.nudgeBackward, function() {
+            $(getActiveStep()).trigger(opts.event_names.goBackward);
+          });
+      }
+
+      function getActiveStep () {
+        return $(el).children(opts.step_el + "." + opts.class_names.active);
+      }
+
+    })(jQuery);
+    
+
+    $(function() {
+      // Initialise stepper
+      // Setup events for moving about
+      $("#steps")
+        .stepper()
+        .children("li")
+          .bind("dblclick", function() {
+            $(this).trigger("activate");
+          })
+          .append('<a href="#" class="previous">Previous</a><a href="#" class="next">Next</a>');
+
+      $("a.next").bind("click", function() {
+        $("#steps").trigger("nudgeForward");
+      });
+      $("a.previous").bind("click", function() {
+        $("#steps").trigger("nudgeBackward");
+      });
+
+    });
+
+  </script>
+
+</head>
+
+<body>
+
+  <a href="#" class="previous">Previous</a>
+  <a href="#" class="next">Next</a>
+  <ol id="steps">
+    <li>First step</li>
+    <li>Second step</li>
+    <li>Third one</li>
+    <li>Fourth</li>
+    <li>Fifth step</li>
+    <li>Sixth</li>
+    <li>Last step</li>
+  </ol>
+
+</body>
+</html>
